@@ -1,6 +1,0 @@
-BOT_TOKEN= //EXAMPLE: '0123456789:fsEg723qjq2f7K9Li1EsxZjT2anMpjK9131'
-DOMAIN= //EXAMPLE: 'https://8e7771ea.ngrok.io'
-USERS= //EXAMPLE: 'user1, user2'
-LOCALE='./locales/en'
-PORT= //EXAMPLE: 2040
-GIT_BASH_PATH= // Path to shell. EXAMPLE: 'C:\\Program Files\\Git\\bin\\bash.exe'
