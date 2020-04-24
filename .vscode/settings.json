@@ -1,6 +1,7 @@
 {
     "editor.tabSize": 4,
     "standard.enable": true,
+    "javascript.validate.enable": false,
     "editor.insertSpaces": true,
     "editor.detectIndentation": false
 }

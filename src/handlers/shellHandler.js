@@ -19,6 +19,8 @@ const zUnicode = 122
 
 const isUpToTree = element => element === '..'
 
+const isLinuxFullPath = path => path[0] === '/'
+
 function upToTree(tempPath = '/') {
     while (true) {
         tempPath = tempPath.substring(0, tempPath.length - 1)
@@ -58,7 +60,7 @@ async function makePath(path = '/') {
         throw await getInstruction('invalidCd')
 
     // If full path in linux 
-    if (path[0] === '/')
+    if (isLinuxFullPath(path))
         return path
 
     // If full path in windows

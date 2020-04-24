@@ -4,9 +4,9 @@ const fs = require('fs')
 const readFile = util.promisify(fs.readFile)
 const writeFile = util.promisify(fs.writeFile)
 
-let pathToLocales = null
-let currentLocale = null
-let configPath = null
+let pathToLocales = ''
+let currentLocale = ''
+let configPath = ''
 
 async function initLocale(localesDirPath = './locales/', localesConfigPath = './locales/localesConfig.json') {
     pathToLocales = localesDirPath
@@ -16,13 +16,13 @@ async function initLocale(localesDirPath = './locales/', localesConfigPath = './
 }
 
 async function setLocale(lang = 'en') {
-    
+
     currentLocale = pathToLocales + lang + '.json'
     // console.log('CURRENT LOCALE: ' + currentLocale)
-    
+
     const configRaw = await readFile(configPath, 'utf-8')
     // console.log('CONFIG RAW ' + configRaw + ' ' + typeof configRaw)
-    
+
     const config = JSON.parse(configRaw)
     // console.log('CONFIG: ' + config)
 

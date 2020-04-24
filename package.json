@@ -15,7 +15,12 @@
         "telegraf-i18n": "^6.6.0",
         "util": "^0.12.2"
     },
-    "devDependencies": {},
+    "devDependencies": {
+        "eslint": "^5.16.0",
+        "eslint-plugin-import": "^2.16.0",
+        "eslint-plugin-prettier": "^3.0.1",
+        "eslint-plugin-unicorn": "^7.1.0"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/SignInUp/remote-shell-telegram-bot.git"
