@@ -1,16 +1,23 @@
 require('dotenv').config()
 
 const util = require('util')
-const fs = require('fs')
 const computerName = require('os').hostname()
 
 const exec = util.promisify(require('child_process').exec)
+const exists = util.promisify(require('fs').exists)
 
 const { SHELL_PATH, USERS } = process.env
+
+const { getInstruction } = require('./locales')
 
 let current_dir = __dirname.replace(new RegExp('\\\\', 'g'), '/') + '/'
 
 async function makePath(path){
+
+     if (!await exists(path)){
+          console.log('Not exists')
+          return null
+     }
 
      // If full path in linux 
      if (path[0] == '/')
@@ -27,40 +34,39 @@ async function makePath(path){
      // Getting path in view like: '.. .. dirName1 dirName2'
      path = path.split('/') 
 
-     // console.log('S / path: ' + path)
+     console.log('S / path: ' + path)
      let tempPath = current_dir
-     // console.log('J tempPathes: ' + tempPath)
-
+     console.log('J tempPathes: ' + tempPath)
 
      // Making new path
      const rePath = [...path].reverse()
-     rePath.map((element, index) => {
-          // console.log('temp + [i]: ' + tempPath + '/' + element)
-          if (element == '..'){
+     await Promise.all(rePath.map(async (element, index) => {
+          console.log('temp + [i]: ' + tempPath + '/' + element)
+          if (element == '..') {
                path.splice(index, index + 2)
-               // console.log('Splice path: ' + path)
-               while(true){
+               console.log('Splice path: ' + path)
+               while (true) {
                     tempPath = tempPath.substring(0, tempPath.length - 1)
                     let letter = tempPath.substr(tempPath.length - 1)
                     if (letter == '/' || letter == '\\')
                          return
                }
           }
-          else if(fs.existsSync(tempPath + '/' + element)){
+          else if (await exists(tempPath + '/' + element)) {
                tempPath += element
+               console.log('exists')
           }
-          else 
-               return 
-     })
-
-     if (path[1] == ':'){
-          tempPath = path[0] + path[1] + '/' + tempPath
-     }
-     else if (path[0] == '/')
-          tempPath = '/' + tempPath
-
-     if (tempPath[tempPath.length - 1] != '/')
-          tempPath += '/'
+          else{
+               if (path[1] == ':'){
+                    tempPath = path[0] + path[1] + '/' + tempPath
+               }
+               else if (path[0] == '/')
+                    tempPath = '/' + tempPath
+          
+               if (tempPath[tempPath.length - 1] != '/')
+                    tempPath += '/'
+          }
+     }))
 
      return tempPath
      
@@ -78,10 +84,10 @@ module.exports = async(ctx) => {
 
           const newPath = await makePath(command.split(' ')[1])
 
-          if (newPath == null)
-               return ctx.replyWithHTML(`<b>Incorrenct path. Write /help to get right 
-                    instruction</b>\n<b>${computerName}:</b> <code>${current_dir}</code>$`)
-
+          if (newPath == null){
+               return ctx.replyWithHTML(await getInstruction('invalidCd') + 
+                    `\n<b>${computerName}:</b> <code>${current_dir}</code>$`)
+          }
           current_dir = newPath
           // console.log('cDir: ' + current_dir)
 
