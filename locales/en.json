@@ -1,6 +1,6 @@
 {
     "start": "Hello. To get info you should write <code>/help</code>",
-    "help": "<b>1)</b> Don't write command <code>cd</code> with other commands in 1 querry\n<b>2)</b> If you write command which depends from path where it executes - add <code>%PATH%</code>. Example: <code>ls %PATH%</code>\n<b>3)</b> Don't write <code>%PATH%</code> when you need to change your directory. Example: \n<b>Bad:</b><code>  cd %PATH%../dirName</code>\n<b>Good:</b><code> cd ../dirName</code>\n<b>4)</b> You can't write \\ in cd request, only /",
+    "help": "<b>1)</b> Don't write command <code>cd</code> with other commands in 1 querry\n<b>2)</b> If you write command which depends from path where it executes - add <code>%PATH%</code>. Example: <code>ls %PATH%</code>\n<b>3)</b> Don't write <code>%PATH%</code> when you need to change your directory. Example: \n<b>Bad:</b><code>  cd %PATH%../dirName</code>\n<b>Good:</b><code> cd ../dirName</code>\n<b>4)</b> You can't write \\ in cd request, only /\n<b>5)</b> /setLang %lang% чтобы задать язык. Пример: <code>/setLang en</code>",
     "invalidCd": "<b>Incorrenct path. Write /help to get instruction</b>.",
     "invalidLang": "<b>Does not exist localization with that language<b>",
     "choose": "You chosen eng"

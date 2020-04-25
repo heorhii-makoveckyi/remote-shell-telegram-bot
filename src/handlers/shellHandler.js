@@ -31,8 +31,9 @@ function upToTree (tempPath = '/') {
 
 function isWindowsFullPath (path = '/') {
   const firstLetter = path[0].charCodeAt(0)
-  return (((firstLetter >= AUnicode && firstLetter <= ZUnicode) || (firstLetter >= aUnicode && firstLetter <= zUnicode)) &&
-          path[1] === ':')
+  return (((firstLetter >= AUnicode && firstLetter <= ZUnicode) ||
+            (firstLetter >= aUnicode && firstLetter <= zUnicode)) &&
+            path[1] === ':')
 }
 
 function makePathRoot (tempPath = '/', path = '/') {
