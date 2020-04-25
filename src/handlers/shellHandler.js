@@ -18,8 +18,8 @@ const aUnicode = 97
 const zUnicode = 122
 
 const isUpToTree = element => element === '..'
-
 const isLinuxFullPath = path => path[0] === '/'
+const isCdCommand = command => command.split(' ')[0] === 'cd'
 
 function upToTree(tempPath = '/') {
     while (true) {
@@ -59,11 +59,9 @@ async function makePath(path = '/') {
     if (!await exists(path))
         throw await getInstruction('invalidCd')
 
-    // If full path in linux 
     if (isLinuxFullPath(path))
         return path
 
-    // If full path in windows
     if (isWindowsFullPath(path))
         return path
 
@@ -95,7 +93,7 @@ module.exports = async (ctx) => {
     }
     command = ctx.message.text.replace(new RegExp('%PATH%', 'g'), currentDir)
 
-    if (command.split(' ')[0] === 'cd') {
+    if (isCdCommand(command)) {
         let newPath = null
         try {
             newPath = await makePath(command.split(' ')[1])

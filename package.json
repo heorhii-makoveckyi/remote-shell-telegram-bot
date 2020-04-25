@@ -26,6 +26,9 @@
         "url": "git+https://github.com/SignInUp/remote-shell-telegram-bot.git"
     },
     "keywords": [
+        "Promise",
+        "async",
+        "await",
         "telegram",
         "bash",
         "shell",

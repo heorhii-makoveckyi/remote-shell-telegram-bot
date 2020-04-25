@@ -1,18 +1,26 @@
 const util = require('util')
 
-const fs = require('fs')
-const readFile = util.promisify(fs.readFile)
-const writeFile = util.promisify(fs.writeFile)
+const readFile = util.promisify(require('fs').readFile)
+const writeFile = util.promisify(require('fs').writeFile)
+
+const invalidLangLiteral = 'invalidLang'
+const currentLocaleLiteral = 'currentLocale'
+const validLocalesLiteral = 'validLocales'
+const pathToLocalesLiteral = 'pathToLocales'
+const chooseLiteral = 'choose'
 
 let pathToLocales = ''
 let currentLocale = ''
 let configPath = ''
 
-async function initLocale(localesDirPath = './locales/', localesConfigPath = './locales/localesConfig.json') {
-    pathToLocales = localesDirPath
-    configPath = localesConfigPath
+async function initLocale(pathToConfig = './locales/localesConfig.json') {
+    
+    configPath = pathToConfig
+    const config = JSON.parse(await readFile(pathToConfig, 'utf-8'))
+    pathToLocales = config[pathToLocalesLiteral]
+
     // console.log('CONFIG PATH: ' + configPath)
-    await setLocale(JSON.parse(await readFile(configPath, 'utf-8'))['currentLocale'])
+    await setLocale(config[currentLocaleLiteral])
 }
 
 async function setLocale(lang = 'en') {
@@ -21,32 +29,25 @@ async function setLocale(lang = 'en') {
     // console.log('CURRENT LOCALE: ' + currentLocale)
 
     const configRaw = await readFile(configPath, 'utf-8')
-    // console.log('CONFIG RAW ' + configRaw + ' ' + typeof configRaw)
-
     const config = JSON.parse(configRaw)
-    // console.log('CONFIG: ' + config)
 
-    config['currentLocale'] = lang
+    config[currentLocaleLiteral] = lang
     await writeFile(configPath, JSON.stringify(config))
 }
 
 async function setLocaleReply(ctx) {
     const lang = ctx.state.command.args
-
     const newLocale = pathToLocales + lang + '.json'
-
     const config = JSON.parse(await readFile(configPath, 'utf-8'))
 
-    if (!config['validLocales'].includes(lang))
-        return ctx.replyWithHTML(await getInstruction('invalidLang'))
+    if (!config[validLocalesLiteral].includes(lang))
+        return ctx.replyWithHTML(await getInstruction(invalidLang))
 
     currentLocale = newLocale
 
-    config['currentLocale'] = lang
-
+    config[currentLocaleLiteral] = lang
     await writeFile(configPath, JSON.stringify(config))
-
-    return ctx.replyWithHTML(await getInstruction('choose'))
+    return ctx.replyWithHTML(await getInstruction(chooseLiteral))
 }
 
 async function getInstructionReply(ctx) {

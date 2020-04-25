@@ -9,7 +9,7 @@ const handleShellCommand = require('./handlers/shellHandler')
 const { initLocale, setLocaleReply, getInstructionReply } = require('./handlers/localesHandler')
 const { getMe } = require('./handlers/getMeHandler')
 
-initLocale('./locales/', './locales/localesConfig.json')
+initLocale('./locales/localesConfig.json')
 
 const bot = new Telegraf(BOT_TOKEN)
 
