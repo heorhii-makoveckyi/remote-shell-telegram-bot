@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const Telegraf = require('telegraf')
-const commandParts = require('telegraf-command-parts')
+const commandPar    ts = require('telegraf-command-parts')
 
 const { BOT_TOKEN, WEBHOOK_DOMAIN, WEBHOOK_PORT } = process.env
 

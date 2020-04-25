@@ -19,14 +19,12 @@ async function initLocale(pathToConfig = './locales/localesConfig.json') {
     const config = JSON.parse(await readFile(pathToConfig, 'utf-8'))
     pathToLocales = config[pathToLocalesLiteral]
 
-    // console.log('CONFIG PATH: ' + configPath)
     await setLocale(config[currentLocaleLiteral])
 }
 
 async function setLocale(lang = 'en') {
 
     currentLocale = pathToLocales + lang + '.json'
-    // console.log('CURRENT LOCALE: ' + currentLocale)
 
     const configRaw = await readFile(configPath, 'utf-8')
     const config = JSON.parse(configRaw)

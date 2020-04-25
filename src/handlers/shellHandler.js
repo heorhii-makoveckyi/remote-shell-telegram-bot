@@ -32,13 +32,9 @@ function upToTree(tempPath = '/') {
 
 function isWindowsFullPath(path = '/') {
     const firstLetter = path[0].charCodeAt(0)
-    // console.log('firstLetter: ' + firstLetter)
-    if ((firstLetter >= AUnicode && firstLetter <= ZUnicode || // A - Z
-        firstLetter >= aUnicode && firstLetter <= zUnicode) & // a - z
-        path[1] === ':') {
-        return true
-    }
-    return false
+    return ((firstLetter >= AUnicode && firstLetter <= ZUnicode || // A - Z
+            firstLetter >= aUnicode && firstLetter <= zUnicode) & // a - z
+            path[1] === ':') 
 }
 
 function makePathRoot(tempPath = '/', path = '/') {
@@ -68,7 +64,6 @@ async function makePath(path = '/') {
     // Getting path in view like: '.. .. dirName1 dirName2'
     path = path.split('/')
 
-    // console.log('S / path: ' + path)
     let tempPath = currentDir
 
     // Making new path
@@ -102,7 +97,6 @@ module.exports = async (ctx) => {
         }
 
         currentDir = newPath
-        // console.log('cDir: ' + currentDir)
         return ctx.replyWithHTML(`<b>${computerName}: </b><code>${currentDir}</code>$`)
     }
 
