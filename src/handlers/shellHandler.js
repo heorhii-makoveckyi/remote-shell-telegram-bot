@@ -1,25 +1,28 @@
-require('dotenv').config()
-
-const util = require('util')
-const computerName = require('os').hostname()
+import util from 'util'
+import os from 'os'
+import pathLib from 'path'
 
 const exec = util.promisify(require('child_process').exec)
 const access = util.promisify(require('fs').access)
 
-const { SHELL_PATH, USERS } = process.env
+let shellPath = ''
+let users = ''
+let logCallback = async (message) => {}
 
-const { getInstruction } = require('./localesHandler')
-
+const computerName = os.hostname()
 let currentDir = __dirname.replace(new RegExp('\\\\', 'g'), '/') + '/'
 
-const AUnicode = 65
-const ZUnicode = 90
-const aUnicode = 97
-const zUnicode = 122
+export { handleShellCommand, initShell }
 
 const isUpToTree = element => element === '..'
-const isLinuxFullPath = path => path[0] === '/'
+const isFullPath = path => pathLib.isAbsolute(path)
 const isCdCommand = command => command.split(' ')[0] === 'cd'
+
+function initShell (pathToShell = '', usersList = '', logFunction = async (message) => {}) {
+  shellPath = pathToShell
+  users = usersList
+  logCallback = logFunction
+}
 
 function upToTree (tempPath = '/') {
   while (true) {
@@ -29,31 +32,19 @@ function upToTree (tempPath = '/') {
   }
 }
 
-function isWindowsFullPath (path = '/') {
-  const firstLetter = path[0].charCodeAt(0)
-  return (((firstLetter >= AUnicode && firstLetter <= ZUnicode) ||
-            (firstLetter >= aUnicode && firstLetter <= zUnicode)) &&
-            path[1] === ':')
-}
-
 function makePathRoot (tempPath = '/', path = '/') {
   if (path[1] === ':') { tempPath = path[0] + path[1] + '/' + tempPath } else if (path[0] === '/') { tempPath = '/' + tempPath }
-
   if (tempPath[tempPath.length - 1] !== '/') { tempPath += '/' }
-
   return tempPath
 }
 
 async function makePath (path = '/') {
   try { await access(path) } catch {
     console.log('Cannot access')
-    throw await getInstruction('invalidCd')
+    throw await logCallback('invalidCd')
   }
 
-  if (isLinuxFullPath(path)) { return path }
-
-  if (isWindowsFullPath(path)) { return path }
-
+  if (isFullPath(path)) { return path }
   // Getting path in view like: '.. .. dirName1 dirName2'
   path = path.split('/')
 
@@ -70,9 +61,9 @@ async function makePath (path = '/') {
   return tempPath
 }
 
-module.exports = async (ctx) => {
+async function handleShellCommand (ctx) {
   console.log('msg: ' + ctx.message.text)
-  if (!USERS.includes(ctx.from.username)) {
+  if (!users.includes(ctx.from.username)) {
     return ctx.reply('You are not correct user')
   }
   const command = ctx.message.text.replace(new RegExp('%PATH%', 'g'), currentDir)
@@ -90,7 +81,7 @@ module.exports = async (ctx) => {
   }
 
   try {
-    const { stdout } = await exec(command, { shell: SHELL_PATH })
+    const { stdout } = await exec(command, { shell: shellPath })
     await ctx.replyWithHTML(`<b>${computerName}: </b><code>${currentDir}</code>$`)
     return ctx.reply(stdout)
   } catch (err) {

@@ -1,7 +1,8 @@
-const util = require('util')
+import util from 'util'
+import fs from 'fs'
 
-const readFile = util.promisify(require('fs').readFile)
-const writeFile = util.promisify(require('fs').writeFile)
+const readFile = util.promisify(fs.readFile)
+const writeFile = util.promisify(fs.writeFile)
 
 const invalidLangLiteral = 'invalidLang'
 const currentLocaleLiteral = 'currentLocale'
@@ -12,6 +13,8 @@ const chooseLiteral = 'choose'
 let pathToLocales = ''
 let currentLocale = ''
 let configPath = ''
+
+export { initLocale, getInstruction, setLocaleReply, getInstructionReply }
 
 async function initLocale (pathToConfig = './locales/localesConfig.json') {
   configPath = pathToConfig
@@ -55,5 +58,3 @@ async function getInstruction (message) {
   const stdout = await readFile(currentLocale, 'utf-8')
   return JSON.parse(stdout)[message]
 }
-
-module.exports = { initLocale, getInstruction, setLocaleReply, getInstructionReply }

@@ -1,14 +1,16 @@
-require('dotenv').config()
+import dotenv from 'dotenv'
 
-const Telegraf = require('telegraf')
-const commandParts = require('telegraf-command-parts')
+import { initLocale, setLocaleReply, getInstructionReply, getInstruction, initShell, handleShellCommand } from './handlers/index'
 
-const { BOT_TOKEN, WEBHOOK_DOMAIN, WEBHOOK_PORT } = process.env
+import Telegraf from 'telegraf'
+import commandParts from 'telegraf-command-parts'
 
-const handleShellCommand = require('./handlers/shellHandler')
-const { initLocale, setLocaleReply, getInstructionReply } = require('./handlers/localesHandler')
+dotenv.config()
+
+const { BOT_TOKEN, WEBHOOK_DOMAIN, WEBHOOK_PORT, SHELL_PATH, USERS } = process.env
 
 initLocale('./locales/localesConfig.json')
+initShell(SHELL_PATH, USERS, getInstruction)
 
 const bot = new Telegraf(BOT_TOKEN)
 
